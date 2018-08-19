@@ -1,9 +1,11 @@
 package com.ps.mapreducedemo.config;
 
 import com.ps.mapreducedemo.MapReduceDemo;
-import com.ps.mapreducedemo.map.FileSplitter;
+import com.ps.mapreducedemo.util.FileSplitter;
 import com.ps.mapreducedemo.map.LineHistogramMaker;
-import com.ps.mapreducedemo.reduce.WordReducer;
+import com.ps.mapreducedemo.reduce.WordCountCalculator;
+import com.ps.mapreducedemo.util.IoUtils;
+import com.ps.mapreducedemo.util.IoUtilsImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -12,19 +14,22 @@ import org.springframework.context.annotation.Lazy;
 public class MapReduceDemoConfiguration {
     private FileSplitter fileSplitter;
     private LineHistogramMaker lineHistogramMaker;
-    private WordReducer wordReducer;
+    private WordCountCalculator wordCountCalculator;
+    private IoUtils ioUtils;
 
     public MapReduceDemoConfiguration(@Lazy FileSplitter fileSplitter,
                                       @Lazy LineHistogramMaker lineHistogramMaker,
-                                      @Lazy WordReducer wordReducer) {
+                                      @Lazy WordCountCalculator wordCountCalculator,
+                                      @Lazy IoUtils ioUtils) {
         this.fileSplitter = fileSplitter;
         this.lineHistogramMaker = lineHistogramMaker;
-        this.wordReducer = wordReducer;
+        this.wordCountCalculator = wordCountCalculator;
+        this.ioUtils = ioUtils;
     }
 
     @Bean
     public MapReduceDemo newMapReduceDemo(){
-        return new MapReduceDemo(fileSplitter,lineHistogramMaker, wordReducer);
+        return new MapReduceDemo(fileSplitter,lineHistogramMaker, wordCountCalculator, ioUtils);
     }
 
     @Bean
@@ -38,7 +43,12 @@ public class MapReduceDemoConfiguration {
     }
 
     @Bean
-    public WordReducer wordReducer() {
-        return new WordReducer();
+    public IoUtils ioUtils(){
+        return new IoUtilsImpl();
+    }
+
+    @Bean
+    public WordCountCalculator wordReducer() {
+        return new WordCountCalculator(ioUtils);
     }
 }

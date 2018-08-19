@@ -9,11 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MapReduceDemoApplication implements CommandLineRunner {
+    private static Logger logger = LoggerFactory
+            .getLogger(MapReduceDemoApplication.class);
+
     @Autowired
     MapReduceDemo mapReduceDemo;
-
-    private static Logger LOG = LoggerFactory
-            .getLogger(MapReduceDemoApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(MapReduceDemoApplication.class, args);
@@ -21,6 +21,6 @@ public class MapReduceDemoApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        mapReduceDemo.doMapReduce("C:\\Temp\\MapReduceDemo");
+        mapReduceDemo.doMapReduce("C:\\Temp\\MapReduceDemo", "SampleText.txt");
     }
 }

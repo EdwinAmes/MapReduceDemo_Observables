@@ -2,6 +2,8 @@ package com.ps.mapreducedemo.map;
 
 import com.ps.mapreducedemo.domain.Line;
 import com.ps.mapreducedemo.domain.WordFrequency;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -12,8 +14,15 @@ import java.util.regex.Pattern;
  * Counts the words per line
  */
 public class LineHistogramMaker {
-    Pattern matchNonLettersPattern = Pattern.compile("[^a-zA-Z ]");
+    static Logger logger = LogManager.getLogger(LineHistogramMaker.class);
+    // Remove punctuation from line
+    Pattern matchNonLettersPattern = Pattern.compile("\\p{Punct}");
 
+    /**
+     *
+     * @param line
+     * @return Flux of #{{@link WordFrequency}} for words in line
+     */
     public Flux<WordFrequency> getHistogramForLine(Line line)
     {
         return Flux.just(line.getText())
